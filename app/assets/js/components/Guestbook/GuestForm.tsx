@@ -13,13 +13,24 @@ interface ComponentState {
 export class GuestForm extends React.Component<ComponentProps, ComponentState> {
     protected initialState = {
         email: '',
-        text: ''
+        text: '',
+        validated: false,
     };
 
     state = this.initialState;
+    form = React.createRef();
 
     handleSubmit = (e) => {
         e.preventDefault();
+
+        if (e.currentTarget.checkValidity() === false) {
+            this.setState((state) => ({
+                ...state,
+                validated: true
+            }));
+            return;
+        }
+
         this.props.onSubmit(this.state);
         this.setState(this.initialState);
     };
@@ -29,7 +40,7 @@ export class GuestForm extends React.Component<ComponentProps, ComponentState> {
 
     render() {
         return <div>
-            <Form onSubmit={this.handleSubmit}>
+            <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
                 <Form.Group controlId="formEmail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control
@@ -39,6 +50,7 @@ export class GuestForm extends React.Component<ComponentProps, ComponentState> {
                         onChange={this.handleInputChange}
                         required
                     />
+                    <Form.Control.Feedback type="invalid">Email required</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="formText">
@@ -51,6 +63,7 @@ export class GuestForm extends React.Component<ComponentProps, ComponentState> {
                         onChange={this.handleInputChange}
                         required
                     />
+                    <Form.Control.Feedback type="invalid">Comment text required</Form.Control.Feedback>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit

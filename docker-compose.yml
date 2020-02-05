@@ -2,8 +2,9 @@ version: '3'
 
 services:
   database:
-    build:
-      context: ./database
+    container_name: "guestbook_database"
+    image: "guestbook-database:latest"
+    build: database
     environment:
       - MYSQL_DATABASE=${DATABASE_NAME}
       - MYSQL_USER=${DATABASE_USER}
@@ -13,22 +14,20 @@ services:
       - "3306:3306"
 
   app:
-    build:
-      context: ../app
+    container_name: "guestbook_app"
+    image: "guestbook-app:latest"
+    build: app
     depends_on:
       - database
     environment:
       - APP_ENV=${APP_ENV}
       - APP_SECRET=${APP_SECRET}
       - DATABASE_URL=mysql://${DATABASE_USER}:${DATABASE_PASSWORD}@database:3306/${DATABASE_NAME}?serverVersion=5.7
-    volumes:
-      - ../app:/var/www
 
   nginx:
-    build:
-      context: ./nginx
-    volumes:
-      - ../app/public:/var/www/public
+    container_name: "guestbook_nginx"
+    image: "guestbook-nginx:latest"
+    build: nginx
     depends_on:
       - app
     ports:

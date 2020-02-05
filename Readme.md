@@ -1,9 +1,13 @@
-# Requirements:
+# Requirements
 - Git
 - Docker
 - Docker-compose
 - Makefile support (Unix-like supported by default, NMAKE for Windows)
 
-# Installation
+# Prerequisites
 - Ensure :80 port is available
-- `make it`
+
+# Installation
+- `make composed`
+- `make db`
+- Open http://localhost
